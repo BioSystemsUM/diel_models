@@ -19,16 +19,6 @@ In particular, the integration of these day-night cycles (diel cycles) is comple
 
 With this in mind, *diel_models* was created to accelerate this process by being able to transform a non-diel model into a diel model.
 
-### Table of contents:
-
-- [Installation](#installation)
-    - [Using pip from PyPi](#using-pip-from-pypi)
-    - [Using pip directly from GitHub](#using-pip-directly-from-github)
-- [Development (or Contributing)](#development-or-contributing)
-- [Using the tool](#using-the-tool)
-- [Expanding the pipeline](#expanding-the-pipeline)
-- [Where to find the publication results](#where-to-find-the-publication-results)
-
 ## Installation
 ### Using pip from PyPi
 
