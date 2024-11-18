@@ -10,9 +10,9 @@ import sys
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'diel_models'
-copyright = '2023, Luciana Martins and João Capela'
+copyright = '2024, Luciana Martins and João Capela'
 author = 'Luciana Martins and João Capela'
-release = 'v1.2.2'
+release = 'v1.2.3'
 
 sys.path.insert(0, os.path.abspath('../src/'))
 

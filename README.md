@@ -23,17 +23,36 @@ With this in mind, this package aims to accelerate this process by being able to
 ### Table of contents:
 
 - [Installation](#installation)
-    - [Pip](#pip)
-- [Getting Started](#getting-started)
+    - [Using pip from PyPi](#using-pip-from-pypi)
+    - [Using pip directly from GitHub](#using-pip-directly-from-github)
+- [Development (or Contributing)](#development-or-contributing)
+- [Using the tool](#using-the-tool)
 - [Expanding the pipeline](#expanding-the-pipeline)
 - [Where to find the publication results](#where-to-find-the-publication-results)
 
 ## Installation
-### Pip
+### Using pip from PyPi
 
-``` pip install diel_models==1.2.2 ```
+``` pip install diel_models==1.2.3 ```
 
-## Getting Started
+### Using pip directly from GitHub
+
+``` pip install git+https://github.com/BioSystemsUM/diel_models.git ```
+
+## Development (or Contributing)
+
+Cloning the repository and setting the conda environment:
+
+```
+git clone https://github.com/BioSystemsUM/diel_models.git
+conda create -n dielmodels
+conda activate dielmodels
+
+pip install -r requirements.txt
+pip install -e .
+```
+
+## Using the tool
 Using this package, you can handle generic or multi-tissue models by:
 
 * Assigning day and night;
@@ -44,7 +63,11 @@ Using this package, you can handle generic or multi-tissue models by:
 
 If each method is to be applied individually it is essential that the first 3 steps are applied in that order specifically.
 
-**Alternatively, it is possible to apply all methods to a given model, running the entire pipeline (where the arguments are all relative to the original model), as shown below:**
+**Alternatively, you can apply all methods to a given model by running the entire pipeline, with all arguments relative to the original model**
+
+This approach has been applied to multiple models, as demonstrated in the [Examples](examples) folder, both generic (e.g. [_Athaliana13_](examples/Athaliana_cheung13.py)) and multi-tissue (e.g. [_MultiQuercus_](examples/MultiQuercus.py)).
+
+Briefly, the pipeline is applied as follows:
 
 - Generic model:
 
@@ -57,6 +80,8 @@ model = cobra.io.read_sbml_model('.../.../desired_single_tissue_model.xml')
 storage_pool_metabolites = ['Metabolite_ID_1', 'Metabolite_ID_2', 'Metabolite_ID_3']
 
 diel_models_creator(model, storage_pool_metabolites, ['Photon_Reaction_ID'], ['Nitrate_Reaction_ID'], 'Biomass_Reaction_ID')
+
+cobra.io.write_sbml_model(model, desired_path)
 ```
 
 where the nitrate uptake ratio is 3:2, since _day_ratio_value_ is 3 and _night_ratio_value_ is 2.
@@ -72,6 +97,7 @@ model = cobra.io.read_sbml_model('.../.../desired_single_tissue_model.xml')
 storage_pool_metabolites = ['Metabolite_ID_1', 'Metabolite_ID_2', 'Metabolite_ID_3']
 
 diel_models_creator(model, storage_pool_metabolites, ['Photon_Reaction_ID'], ['Nitrate_Reaction_ID'], 'Biomass_Reaction_ID', day_ratio_value=desired_value_1, night_ratio_value=desired_value_2)
+cobra.io.write_sbml_model(model, desired_path)
 ```
 
 - Multi-tissue model:
@@ -87,6 +113,7 @@ storage_pool_metabolites = ['Metabolite_ID_1', 'Metabolite_ID_2', 'Metabolite_ID
 tissues = ['Tissue_ID_1', 'Tissue_ID_2']
 
 diel_models_creator(model, storage_pool_metabolites, ['Photon_Reaction_ID'], ['Nitrate_Reaction_ID'], 'Biomass_Reaction_ID', tissues)
+cobra.io.write_sbml_model(model, desired_path)
 ```
 
 where the nitrate uptake ratio is 3:2, but it's also possible to adjust this ratio to different values.
