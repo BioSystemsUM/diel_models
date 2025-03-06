@@ -11,7 +11,7 @@ from diel_models.pipeline import Pipeline
 
 
 def diel_models_creator(model: Model, storage_pool_metabolites: List[str], photon_reaction_id: List[str],
-                        nitrate_exchange_reaction: List[str], biomass_reaction_id: str = None, tissues: List[str] = None,
+                        nitrate_exchange_reaction: List[str] = [], biomass_reaction_id: str = None, tissues: List[str] = None,
                         day_ratio_value: int = 3, night_ratio_value: int = 2) -> Model:
     """
     Function that allows you to run the pipeline in one go,
@@ -42,8 +42,9 @@ def diel_models_creator(model: Model, storage_pool_metabolites: List[str], photo
     """
     storage_pool_metabolites_with_day = [metabolite + "_Day" for metabolite in storage_pool_metabolites]
     photon_reaction_id_night = [photon_night_reaction + "_Night" for photon_night_reaction in photon_reaction_id]
-    nitrate_exchange_reaction_night = [nitrate_reaction + "_Night" for nitrate_reaction in nitrate_exchange_reaction]
-    nitrate_exchange_reaction_day = [nitrate_reaction + "_Day" for nitrate_reaction in nitrate_exchange_reaction]
+    if nitrate_exchange_reaction:
+        nitrate_exchange_reaction_night = [nitrate_reaction + "_Night" for nitrate_reaction in nitrate_exchange_reaction]
+        nitrate_exchange_reaction_day = [nitrate_reaction + "_Day" for nitrate_reaction in nitrate_exchange_reaction]
 
     if biomass_reaction_id is not None:
         biomass_day_id = biomass_reaction_id + "_Day"
@@ -54,18 +55,22 @@ def diel_models_creator(model: Model, storage_pool_metabolites: List[str], photo
             StoragePoolGenerator(model, storage_pool_metabolites_with_day, tissues),
             PhotonReactionInhibitor(model, photon_reaction_id_night),
             BiomassAdjuster(model, biomass_day_id, biomass_night_id),
-            NitrateUptakeRatioCalibrator(model, nitrate_exchange_reaction_day, nitrate_exchange_reaction_night,
-                                         day_ratio_value=day_ratio_value, night_ratio_value=night_ratio_value)
         ]
+        if nitrate_exchange_reaction:
+            steps.append(NitrateUptakeRatioCalibrator(model, nitrate_exchange_reaction_day, nitrate_exchange_reaction_night,
+                                         day_ratio_value=day_ratio_value, night_ratio_value=night_ratio_value))
 
     else:
         steps = [
             DayNightCreator(model),
             StoragePoolGenerator(model, storage_pool_metabolites_with_day, tissues),
             PhotonReactionInhibitor(model, photon_reaction_id_night),
-            NitrateUptakeRatioCalibrator(model, nitrate_exchange_reaction_day, nitrate_exchange_reaction_night,
-                                         day_ratio_value=day_ratio_value, night_ratio_value=night_ratio_value)
         ]
+
+
+        if nitrate_exchange_reaction:
+            steps.append(NitrateUptakeRatioCalibrator(model, nitrate_exchange_reaction_day, nitrate_exchange_reaction_night,
+                                            day_ratio_value=day_ratio_value, night_ratio_value=night_ratio_value))
 
     pipeline = Pipeline(model, steps)
     pipeline.run()

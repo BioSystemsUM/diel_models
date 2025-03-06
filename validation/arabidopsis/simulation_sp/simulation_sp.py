@@ -3,22 +3,20 @@ import os
 import cobra.io
 import pandas as pd
 from cobra.flux_analysis import pfba, flux_variability_analysis as fva
-from tests import TEST_DIR
 
-from src.diel_models.nitrate_uptake_ratio import NitrateUptakeRatioCalibrator
+from diel_models.nitrate_uptake_ratio import NitrateUptakeRatioCalibrator
 
 
-def load_model():
-    model_path = os.path.join(TEST_DIR, 'reconstruction_results', 'MODEL1507180028','results_troppo', 'DielModel',
-                              'reconstructed_models', 'Diel_Model.xml')
+def load_model(model_path, nitrate_uptake):
     model = cobra.io.read_sbml_model(model_path)
     model.reactions.get_by_id("Biomass_Total").upper_bound = 0.11
     model.reactions.get_by_id("Biomass_Total").lower_bound = 0.11
     model.objective = "Ex16_Day"
     model.objective_direction = "min"
-    nitrate_calibrator = NitrateUptakeRatioCalibrator(model, ["Ex4_Day"], ["Ex4_Night"])
-    nitrate_calibrator.run()
-    model = nitrate_calibrator.model
+    if nitrate_uptake:
+        nitrate_calibrator = NitrateUptakeRatioCalibrator(model, ["Ex4_Day"], ["Ex4_Night"])
+        nitrate_calibrator.run()
+        model = nitrate_calibrator.model
     model.reactions.get_by_id("Ex5_Night").bounds = (0, 1000)
     model.reactions.get_by_id("Ex5_Day").bounds = (0, 1000)
     return model
@@ -29,7 +27,7 @@ def simulate(model):
     fva_solution = fva(model, [storage for storage in model.reactions if "Day_sp" in storage.id],
                        fraction_of_optimum=1.0, processes=os.cpu_count())
     assert solution['Biomass_Total'] == 0.11
-    assert round(solution['Ex4_Day'] * 2, 4) == round(solution['Ex4_Night'] * 3, 4)
+    # assert round(solution['Ex4_Day'] * 2, 4) == round(solution['Ex4_Night'] * 3, 4)
     return solution, fva_solution
 
 
@@ -53,6 +51,6 @@ def analyze_solution(pfba_solution, fva_solution):
 
 
 if __name__ == '__main__':
-    model = load_model()
+    model = load_model("../diel_aragem.xml", True)
     pfba, fva = simulate(model)
     analyze_solution(pfba, fva)

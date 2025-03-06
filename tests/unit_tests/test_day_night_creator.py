@@ -82,7 +82,7 @@ class TestDayNightCreator(TestCase):
 
     def test_compartments_creator_multi_tissue_quercus(self):
 
-        multi_tissue_model = os.path.join(TEST_DIR, "models", "MultiTissueQuercusModel.xml")
+        multi_tissue_model = os.path.join(TEST_DIR, "data", "MultiTissueQuercusModel.xml")
         multi_model = cobra.io.read_sbml_model(multi_tissue_model)
         multi_model_copy = copy.deepcopy(multi_model)
 

@@ -162,6 +162,11 @@ from cobra import Model
 from diel_models.new_class import NewClass
 
 from diel_models.pipeline import Pipeline
+from diel_models.day_night_creator import DayNightCreator
+from diel_models.storage_pool_generator import StoragePoolGenerator
+from diel_models.photon_reaction_inhibitor import PhotonReactionInhibitor
+from diel_models.biomass_adjuster import BiomassAdjuster
+from diel_models.nitrate_uptake_ratio import NitrateUptakeRatioCalibrator
 
 def diel_models_creator(model: Model, storage_pool_metabolites: List[str], photon_reaction_id: List[str],
                         nitrate_exchange_reaction: List[str], param1, biomass_reaction_id: str = None, tissues: List[str] = None,
@@ -169,10 +174,16 @@ def diel_models_creator(model: Model, storage_pool_metabolites: List[str], photo
   
     storage_pool_metabolites_with_day = [metabolite + "_Day" for metabolite in storage_pool_metabolites]
     photon_reaction_id_night = [photon_night_reaction + "_Night" for photon_night_reaction in photon_reaction_id]
-    # ...
+    biomass_day_id = biomass_reaction_id + "_Day"
+    biomass_night_id = biomass_reaction_id + "_Night"
+    nitrate_exchange_reaction_night = [nitrate_reaction + "_Night" for nitrate_reaction in nitrate_exchange_reaction]
+    nitrate_exchange_reaction_day = [nitrate_reaction + "_Day" for nitrate_reaction in nitrate_exchange_reaction]
     
     steps = [
-             # ...
+            DayNightCreator(model),
+            StoragePoolGenerator(model, storage_pool_metabolites_with_day, tissues),
+            PhotonReactionInhibitor(model, photon_reaction_id_night),
+            BiomassAdjuster(model, biomass_day_id, biomass_night_id),
             NewClass(model, param1)
         ]
 

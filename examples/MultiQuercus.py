@@ -1,6 +1,5 @@
 import cobra
 import os
-from tests import TEST_DIR
 from diel_models.diel_models_creator import diel_models_creator
 
 
@@ -29,10 +28,10 @@ def diel_multi_quercus(model):
                         ["EX_C00205__dra"], ["EX_C00244__dra"], "Total_biomass",
                         ['Leaf', 'Ibark', 'Phellogen'])
 
-    cobra.io.write_sbml_model(model, os.path.join(TEST_DIR, 'models', 'diel_multi_quercus_model.xml'))
+    cobra.io.write_sbml_model(model, os.path.join('models', 'diel_multi_quercus_model.xml'))
 
 
 if __name__ == '__main__':
-    multi_quercus_model_path = os.path.join(TEST_DIR, 'models', 'MultiTissueQuercusModel.xml')
+    multi_quercus_model_path = os.path.join('models', 'MultiTissueQuercusModel.xml')
     multi_quercus_model = cobra.io.read_sbml_model(multi_quercus_model_path)
     diel_multi_quercus(multi_quercus_model)

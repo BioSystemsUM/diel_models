@@ -1,6 +1,5 @@
 import cobra
 import os
-from tests import TEST_DIR
 from diel_models.diel_models_creator import diel_models_creator
 
 
@@ -22,10 +21,10 @@ def diel_maize_simons(model):
                         ["ExBe10"], "Biomass_synthesis_L",
                         tissues=["Bundle Sheath", "Mesophyll"])
 
-    cobra.io.write_sbml_model(model, os.path.join(TEST_DIR, 'models', 'diel_maize_simons_model.xml'))
+    cobra.io.write_sbml_model(model, os.path.join('models', 'diel_maize_simons_model.xml'))
 
 
 if __name__ == '__main__':
-    maize_simons_model_path = os.path.join(TEST_DIR, 'models', 'Maize_Simons_mat.xml')
+    maize_simons_model_path = os.path.join('models', 'Maize_Simons_mat.xml')
     maize_simons_model = cobra.io.read_sbml_model(maize_simons_model_path)
     diel_maize_simons(maize_simons_model)

@@ -1,6 +1,5 @@
 import os
 import cobra
-from tests import TEST_DIR
 import pandas as pd
 
 
@@ -11,7 +10,7 @@ def tomato_model_adjust(tomato_model):
     for reaction in tomato_model.reactions:
         reactions_dict[reaction.name] = reaction.id
 
-    df = pd.read_excel(os.path.join(TEST_DIR, 'data', 'tpj13075-sup-0013-datafiles3.xlsx'))
+    df = pd.read_excel(os.path.join('data', 'tpj13075-sup-0013-datafiles3.xlsx'))
 
     reactions_bounds = []
     for index, row in df.iterrows():
@@ -51,7 +50,7 @@ def tomato_model_adjust(tomato_model):
 
     ## Create biomass reaction
 
-    bm_met_df = pd.read_excel(os.path.join(TEST_DIR, 'data', 'Biomass_Reactions.xlsx'))
+    bm_met_df = pd.read_excel(os.path.join('data', 'Biomass_Reactions.xlsx'))
     coef_dict = dict(zip(bm_met_df["Component"], bm_met_df["Coefficient"]))
 
     biomass_rxn = cobra.Reaction("biomass_reaction")
@@ -66,10 +65,10 @@ def tomato_model_adjust(tomato_model):
 
     tomato_model.objective = tomato_model.reactions.get_by_id("EX_x_Photon")
 
-    cobra.io.write_sbml_model(tomato_model, os.path.join(TEST_DIR, 'data', 'functional_tomato_model.xml'))
+    cobra.io.write_sbml_model(tomato_model, os.path.join('data', 'functional_tomato_model.xml'))
 
 
 if __name__ == '__main__':
-    tomato_model_path = os.path.join(TEST_DIR, 'data', 'tpj13075-sup-0011-DataFileS1.xml')
+    tomato_model_path = os.path.join('data', 'tpj13075-sup-0011-DataFileS1.xml')
     tomato_model = cobra.io.read_sbml_model(tomato_model_path)
     tomato_model_adjust(tomato_model)

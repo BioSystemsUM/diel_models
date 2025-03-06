@@ -1,6 +1,5 @@
 import cobra
 import os
-from tests import TEST_DIR
 from diel_models.diel_models_creator import diel_models_creator
 
 
@@ -14,10 +13,10 @@ def diel_quercus(model):
                          "C00208__cyto", "C00122__cyto", "C00158__cyto"], ["EX_C00205__dra"], ["EX_C00244__dra"], "e_Biomass_Leaf__cyto"
                         )
 
-    cobra.io.write_sbml_model(model, os.path.join(TEST_DIR, 'models', 'diel_quercus_model.xml'))
+    cobra.io.write_sbml_model(model, os.path.join('models', 'diel_quercus_model.xml'))
 
 
 if __name__ == '__main__':
-    quercus_model_path = os.path.join(TEST_DIR, 'models', 'QuercusSuberGeneralModel.xml')
+    quercus_model_path = os.path.join('models', 'QuercusSuberGeneralModel.xml')
     quercus_model = cobra.io.read_sbml_model(quercus_model_path)
     diel_quercus(quercus_model)

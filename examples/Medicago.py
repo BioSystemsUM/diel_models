@@ -1,6 +1,5 @@
 import cobra
 import os
-from tests import TEST_DIR
 from diel_models.diel_models_creator import diel_models_creator
 
 
@@ -14,10 +13,10 @@ def diel_medicago(model):
                          "MAL_C", "FUM_C", "CIT_C"], ["EX_Light_E"], ["EX_NITRATE_E"], "BiomassShoot",
                         )
 
-    cobra.io.write_sbml_model(model, os.path.join(TEST_DIR, 'models', 'diel_medicago_model.xml'))
+    cobra.io.write_sbml_model(model, os.path.join('models', 'diel_medicago_model.xml'))
 
 
 if __name__ == '__main__':
-    medicago_model_path = os.path.join(TEST_DIR, 'models', 'MedicagoTruncatula.xml')
+    medicago_model_path = os.path.join('models', 'MedicagoTruncatula.xml')
     medicago_model = cobra.io.read_sbml_model(medicago_model_path)
     diel_medicago(medicago_model)

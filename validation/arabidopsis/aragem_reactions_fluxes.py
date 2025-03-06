@@ -1,6 +1,5 @@
 import os
 import cobra
-from tests import TEST_DIR
 from cobra.flux_analysis import pfba
 
 
@@ -65,11 +64,13 @@ def validate_reactions_fluxes(original_model, diel_model):
           f'{diel_solution["R01523_p_Night"]}')
 
 if __name__ == '__main__':
-    diel_model_path = os.path.join(TEST_DIR, 'reconstruction_results', 'MODEL1507180028', 'results_troppo', 'DielModel',
-                              'reconstructed_models', 'Diel_Model.xml')
+#     diel_model_path = os.path.join(TEST_DIR, 'reconstruction_results', 'MODEL1507180028', 'results_troppo', 'DielModel',
+#                               'reconstructed_models', 'Diel_Model.xml')
+    
+    diel_model_path = "diel_aragemwo_nitrate.xml"
 
     diel_model = cobra.io.read_sbml_model(diel_model_path)
 
-    original_model = cobra.io.read_sbml_model(os.path.join(TEST_DIR, 'data', 'aragem_photo.xml'))
+    original_model = cobra.io.read_sbml_model('aragem_photo.xml')
 
     validate_reactions_fluxes(original_model, diel_model)

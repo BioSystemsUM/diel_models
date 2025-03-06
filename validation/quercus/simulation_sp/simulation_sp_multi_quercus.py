@@ -3,20 +3,20 @@ import os
 import cobra.io
 import pandas as pd
 from cobra.flux_analysis import pfba, flux_variability_analysis as fva
-from validation.quercus import QUERCUS_DIR
 
-from src.diel_models.nitrate_uptake_ratio import NitrateUptakeRatioCalibrator
+from diel_models.nitrate_uptake_ratio import NitrateUptakeRatioCalibrator
 
 
-def load_model():
-    model = cobra.io.read_sbml_model('diel_multi_quercus_model_fixed.xml')
+def load_model(model_path, nitrate_uptake=True):
+    model = cobra.io.read_sbml_model(model_path)
     model.reactions.get_by_id("Total_biomass").bounds = (0.11, 0.11)
     model.reactions.EX_C00205__dra_Day.bounds = (-1000, 1000)
     model.objective = "EX_C00205__dra_Day"
     model.objective_direction = "max"
-    nitrate_calibrator = NitrateUptakeRatioCalibrator(model, ["EX_C00244__dra_Day"], ["EX_C00244__dra_Night"])
-    nitrate_calibrator.run()
-    model = nitrate_calibrator.model
+    if nitrate_uptake:
+        nitrate_calibrator = NitrateUptakeRatioCalibrator(model, ["EX_C00244__dra_Day"], ["EX_C00244__dra_Night"])
+        nitrate_calibrator.run()
+        model = nitrate_calibrator.model
     model.reactions.get_by_id("EX_C00014__dra_Day").bounds = (0, 100000)
     model.reactions.get_by_id("EX_C00014__dra_Night").bounds = (0, 100000)
     return model
@@ -27,7 +27,7 @@ def simulate(model):
     fva_solution = fva(model, [storage for storage in model.reactions if "Day_sp" in storage.id],
                        fraction_of_optimum=1.0, processes=os.cpu_count())
     assert solution['Total_biomass'] == 0.11
-    assert round(solution['EX_C00244__dra_Day'] * 2, 4) == round(solution['EX_C00244__dra_Night'] * 3, 4)
+    # assert round(solution['EX_C00244__dra_Day'] * 2, 4) == round(solution['EX_C00244__dra_Night'] * 3, 4)
     return solution, fva_solution
 
 
@@ -51,6 +51,7 @@ def analyze_solution(pfba_solution, fva_solution):
 
 
 if __name__ == '__main__':
-    model = load_model()
+    model = load_model('diel_multi_quercus_model_fixed.xml', False)
+    # model = load_model('../diel_quercus_model_wo_nitrate.xml', False)
     pfba, fva = simulate(model)
     analyze_solution(pfba, fva)

@@ -1,6 +1,5 @@
 import os
 import cobra
-from tests import TEST_DIR
 from cobra.flux_analysis import pfba
 import pandas as pd
 
@@ -161,10 +160,13 @@ def validate_reactions_fluxes(original_model, diel_model, original_multitissue_m
 
 
 if __name__ == '__main__':
-    original_model = cobra.io.read_sbml_model(os.path.join(TEST_DIR, 'models', 'QuercusSuberGeneralModel.xml'))
-    diel_model = cobra.io.read_sbml_model(os.path.join(TEST_DIR, 'models', "diel_quercus_model.xml"))
+    original_model = cobra.io.read_sbml_model('QuercusSuberGeneralModel.xml')
+    diel_model = cobra.io.read_sbml_model("diel_quercus_model.xml")
     original_multitissue_model = cobra.io.read_sbml_model(
-        os.path.join(TEST_DIR, 'models', "MultiTissueQuercusModel.xml"))
-    diel_multitissue_model = cobra.io.read_sbml_model(os.path.join(TEST_DIR, 'models', "diel_multi_quercus_model.xml"))
-
+        "MultiTissueQuercusModel.xml")
+    diel_multitissue_model = cobra.io.read_sbml_model("diel_quercus_model_wo_nitrate.xml")
+    original_model.solver = "cplex"
+    diel_model.solver = "cplex"
+    original_multitissue_model.solver = "cplex"
+    diel_multitissue_model.solver = "cplex"
     validate_reactions_fluxes(original_model, diel_model, original_multitissue_model, diel_multitissue_model)

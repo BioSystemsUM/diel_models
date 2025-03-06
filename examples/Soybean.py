@@ -1,6 +1,5 @@
 import cobra
 import os
-from tests import TEST_DIR
 from diel_models.diel_models_creator import diel_models_creator
 
 
@@ -13,11 +12,11 @@ def diel_soybean(model):
                          "D-GLT_c", "ASN_c", "SER_c", "STARCH_p", "FRU_c", "MAL_c",
                          "FUM_c", "CIT_c"], ["Photon_tx"], nitrate_exchange_reaction=["NO3_tx"])
 
-    cobra.io.write_sbml_model(model, os.path.join(TEST_DIR, 'models', 'diel_soybean_model.xml'))
+    cobra.io.write_sbml_model(model, os.path.join('models', 'diel_soybean_model.xml'))
 
 
 if __name__ == '__main__':
-    soybean_model_path = os.path.join(TEST_DIR, 'models', 'Soybean_GSMM.xml')
+    soybean_model_path = os.path.join('models', 'Soybean_GSMM.xml')
     soybean_model = cobra.io.read_sbml_model(soybean_model_path)
     met_list = ["SUCROSE_c", "SULFATE_c", "NITRATE_c", "HIS_c", "ILE_c",
                          "LEU_c", "LYS_c", "MET_c", "PHE_c", "THR_c", "TRP_c", "VAL_c",
