@@ -168,6 +168,8 @@ def diel_models_creator(model: Model, storage_pool_metabolites: List[str], photo
             StoragePoolGenerator(model, storage_pool_metabolites_with_day, tissues),
             PhotonReactionInhibitor(model, photon_reaction_id_night),
             BiomassAdjuster(model, biomass_day_id, biomass_night_id),
+            NitrateUptakeRatioCalibrator(model, nitrate_exchange_reaction_day, nitrate_exchange_reaction_night,
+                                         day_ratio_value=day_ratio_value, night_ratio_value=night_ratio_value),
             NewClass(model, param1)
         ]
 
